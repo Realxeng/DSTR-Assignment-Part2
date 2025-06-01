@@ -4,10 +4,6 @@
 #include <string>
 using namespace std;
 
-/**
- * Basic player record used across the registration system.
- * No STL containers besides std::string are used (permitted).
- */
 struct Player {
     int id;         
     string name;    
