@@ -66,6 +66,13 @@ public:
 
     ~PlayerRegistration()
     {
+        playerNode* current = front;
+        while (current != nullptr)
+        {
+            playerNode* nextNode = current->next;
+            delete current;
+            current = nextNode;
+        }
         cout << queueName << " removed" << endl;
     }
 
