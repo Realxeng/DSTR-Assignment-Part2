@@ -61,6 +61,8 @@ public:
             rear->next = newNode;
             rear = newNode;
         }
+        size++;
+        cout << "Player: " << player->name << " added to waiting list." << endl;
     }
 
     playerNode* dequeue()
@@ -80,6 +82,7 @@ public:
         }
         delete node;
         size--;
+        cout << "Player: " << player->name << " removed from waiting list." << endl;
         return player; // Return the dequeued player node
     }
 

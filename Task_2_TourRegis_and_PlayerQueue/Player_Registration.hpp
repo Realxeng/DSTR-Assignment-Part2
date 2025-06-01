@@ -160,6 +160,7 @@ public:
             rear = nullptr; // Queue is now empty
         }
         size--;
+        cout << "Player: " << node->name << " with ID " << node->id << " was removed from the Registration Queue." << endl;
         return node; // Return the removed player node
     }
 
@@ -187,7 +188,7 @@ public:
                     rear = current->prev; 
                 }
 
-                cout << "Player: " << current->name << " with ID " << playerId << " was removed from the queue." << endl;
+                cout << "Player: " << current->name << " with ID " << playerId << " was removed from the Registration Queue." << endl;
                 delete current;
                 size--;
                 return true;
