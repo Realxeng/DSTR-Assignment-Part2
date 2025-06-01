@@ -140,6 +140,9 @@ public:
             rear = newNode;
             size++;
         }
+        
+        cout << "Player: " << name << " with ID " << id << " was added to the Registration Queue." << endl;
+        return newNode; 
     }
 
     playerNode* popFront()  // remove player from the front of the queue

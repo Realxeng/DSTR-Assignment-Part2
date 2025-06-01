@@ -20,6 +20,9 @@
         "string_view": "cpp",
         "tuple": "cpp",
         "typeinfo": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "__bit_reference": "cpp",
+        "bitset": "cpp",
+        "variant": "cpp"
     }
 }
