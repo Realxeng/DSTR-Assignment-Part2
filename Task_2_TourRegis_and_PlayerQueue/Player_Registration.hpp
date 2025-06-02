@@ -206,10 +206,13 @@ public:
     {
         cout << queueName << " with " << size << " players registered: " << endl;
         playerNode* current = front;
+        int queueNum = 1;
         while (current != nullptr)
         {
-            cout << "[" << current->id << ": " << current->name << "]" << endl;
+            cout << queueNum << ". PlayerID(" << current->id << ") " << current->name << " (Early Bird: " << (current->isEarlyBird ? "Yes" : "No") 
+                 << ", Wildcard: " << (current->isWildcard ? "Yes" : "No") << ")" << endl;
             current = current->next;
+            queueNum++;
         }
     }
     

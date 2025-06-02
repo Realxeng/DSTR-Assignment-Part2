@@ -20,7 +20,10 @@ class RegistrationManager
         for (int i = 0; i < finalistCount; ++i)
         {
             if (finalists[i].id == playerId)
+            {
+                cout << "Player with ID " << playerId << " found in finalists at index " << i << "." << endl;
                 return i;
+            }
         }
         return -1;
     }
@@ -44,16 +47,8 @@ public:
 
     void registerPlayer(int id, string name, bool isEarlyBird, bool isWildcard)
     {
-        if (regQueue.getSize() < capacity)
-        {
-            regQueue.registerPlayer(id, name, isEarlyBird, isWildcard);
-        }
-        else
-        {
-            cout << "Registration queue is full. Player cannot be registered." << endl;
-            cout << "Player : " << name << " with ID " << id << " will be added to the waiting list." << endl;
-            waitQueue.enqueue(regQueue.registerPlayer(id, name, isEarlyBird, isWildcard));
-        }
+        regQueue.registerPlayer(id, name, isEarlyBird, isWildcard);
+        
     }
 
     void finaliseList()
@@ -83,7 +78,7 @@ public:
             if (checkQueue.peekAt(i)->id == playerId)
             {
                 cout << "Player with ID " << playerId << " is already checked in." << endl;
-                return false; // already checked in
+                return false;
             }
         }
         return checkQueue.enqueue(&finalists[index]);
@@ -106,7 +101,6 @@ public:
         {
             playerNode* replacement = waitQueue.dequeue();
             finalists[finalistCount++] = *replacement;
-            checkQueue.enqueue(replacement);
             cout << "Player with ID " << playerId << " has been replaced by player with ID " << replacement->id << "." << endl;
             return true;
         }
@@ -116,16 +110,17 @@ public:
     }
     void showAll()
     {
-        cout << "--- STATUS ---" << endl;
+        cout << endl << "--- STATUS ---" << endl;
+        regQueue.displayQueue();
         cout << "Finalists [" << finalistCount << "]: "<< endl;
         for (int i = 0; i < finalistCount; ++i)
         {
-            cout << i + 1 << ". PlayerID (" << finalists[i].id << ") " << finalists[i].name << endl;
+            cout << i + 1 << ". PlayerID(" << finalists[i].id << ") " << finalists[i].name << endl;
         }
         cout << endl;
-        checkQueue.display();
+        checkQueue.displayQueue();
         waitQueue.displayQueue();
-        cout << "--------------" << endl;
+        cout << "--------------" << endl << endl;
     }
 };
 

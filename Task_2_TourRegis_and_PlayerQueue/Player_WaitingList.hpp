@@ -90,11 +90,12 @@ public:
     {
         cout << queueName << " with " << size << " players waiting: " << endl;
         waitNode* current = front;
+        int queueNum = 1;
         while (current != nullptr)
         {
-            int queueNum = 1;
             cout << queueNum << ". PlayerID(" << current->data->id << ") " << current->data->name << endl;
             current = current->next;
+            queueNum++;
         }
         cout << endl;
     }

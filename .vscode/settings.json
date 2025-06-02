@@ -23,6 +23,7 @@
         "algorithm": "cpp",
         "__bit_reference": "cpp",
         "bitset": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "ostream": "cpp"
     }
 }

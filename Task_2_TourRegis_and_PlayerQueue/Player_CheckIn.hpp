@@ -107,7 +107,8 @@ public:
         }
         return arr[(frontIndex + index) % capacity];
     }
-    void display()
+    
+    void displayQueue()
     {
         cout << "Checked-in [" << count << "]: " << endl;
         for (int i = 0; i < count; ++i)
