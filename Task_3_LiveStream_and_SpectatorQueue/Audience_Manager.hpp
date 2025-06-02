@@ -55,28 +55,43 @@ public:
         return false;
     }
 
-    void removeAudienceMember(int id) {
-        if (vipSeats.removeMemberById(id)) {
-            cout << "Removed audience member with ID " << id << " from VIP seats." << endl;
-            tryFillOverflow();
-            return;
+    bool removeFromArea(const std::string& area, int id) {
+        if (area == "VIP") {
+            if (vipSeats.removeMemberById(id)) {
+                cout << "Removed audience member with ID " << id << " from VIP seats." << endl;
+                tryFillOverflow();
+                return true;
+            }
         }
-        if (influencerSeats.removeMemberById(id)) {
-            cout << "Removed audience member with ID " << id << " from Influencer seats." << endl;
-            tryFillOverflow();
-            return;
+        else if (area == "Influencer") {
+            if (influencerSeats.removeMemberById(id)) {
+                cout << "Removed audience member with ID " << id << " from Influencer seats." << endl;
+                tryFillOverflow();
+                return true;
+            }
         }
-        if (liveStreamSlots.removeMemberById(id)) {
-            cout << "Removed audience member with ID " << id << " from Live Stream slots." << endl;
-            tryFillOverflow();
-            return;
+        else if (area == "Live Stream") {
+            if (liveStreamSlots.removeMemberById(id)) {
+                cout << "Removed audience member with ID " << id << " from Live Stream slots." << endl;
+                tryFillOverflow();
+                return true;
+            }
         }
-        if (generalSeats.removeMemberById(id)) {
-            cout << "Removed audience member with ID " << id << " from General seats." << endl;
-            tryFillOverflow();
-            return;
+        else if (area == "General") {
+            if (generalSeats.removeMemberById(id)) {
+                cout << "Removed audience member with ID " << id << " from General seats." << endl;
+                tryFillOverflow();
+                return true;
+            }
         }
-        cout << "Audience member with ID " << id << " not found in any seating." << endl;
+        else if (area == "Overflow") {
+            if (overflowQueue.removeMemberById(id)) {  // Assuming OverflowQueue has this method
+                cout << "Removed audience member with ID " << id << " from Overflow queue." << endl;
+                return true;
+            }
+        }
+        cout << "Audience member with ID " << id << " not found in " << area << "." << endl;
+        return false;
     }
 
     void tryFillOverflow() {
