@@ -20,6 +20,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audience_Member.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Audience_Manager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

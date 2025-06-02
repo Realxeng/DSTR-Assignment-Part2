@@ -9,19 +9,19 @@ using namespace std;
 struct Match {
     playerNode* player1;
     playerNode* player2;
-    int winnerId; // -1 means no winner decided yet
+    int winnerId;
 
-    Match() : player1(nullptr), player2(nullptr), winnerId(-1) {}
+	Match() : player1(nullptr), player2(nullptr), winnerId(-1) {} //-1 indicates no winner yet
 };
 
 class MatchSchedulingManager {
-    playerNode* qualifiers;  // Array for qualifier stage players
+    playerNode* qualifiers;
     int qualifierCount;
 
-    playerNode* groupStage;  // Array for group stage players
+    playerNode* groupStage;
     int groupCount;
 
-    Match* knockoutMatches;  // Array for knockout matches
+    Match* knockoutMatches;
     int knockoutCount;
 
 public:
@@ -111,7 +111,11 @@ public:
             addGroupStagePlayer(winnerId);
         }
         else {
-            cout << "Winner ID does not match players in this match." << endl;
+            cout << "Winner ID " << winnerId << " does not match players in this match: ";
+            printPlayer(m.player1);
+            cout << " vs ";
+            printPlayer(m.player2);
+            cout << endl;
         }
     }
 

@@ -42,12 +42,11 @@ class RegistrationManager
         return -1;
     }
 public:
-    // Getter for finalists pointer
+
     playerNode* getFinalists() {
         return finalists;
     }
 
-    // Getter for finalist count
     int getFinalistCount() {
         return finalistCount;
     }

@@ -1,157 +1,4 @@
-#ifndef AUDIENCE_QUEUE_MANAGER_HPP
-#define AUDIENCE_QUEUE_MANAGER_HPP
-
-#include <iostream>
-#include <string>
-#include <limits>
-using namespace std;
-
-// Structure for Audience Member
-struct AudienceMember {
-    int id;
-    string name;
-    bool isVIP;
-    bool isInfluencer;
-    bool hasLiveStreamSetup;
-};
-
-class FixedArrayQueue {
-    AudienceMember* seats;
-    int capacity;
-    int count;
-
-public:
-    FixedArrayQueue(int cap) : capacity(cap), count(0) {
-        seats = new AudienceMember[capacity];
-    }
-
-    ~FixedArrayQueue() {
-        delete[] seats;
-    }
-
-    bool isFull() const {
-        return count == capacity;
-    }
-
-    bool isEmpty() const {
-        return count == 0;
-    }
-
-    // Adds a member to the seats if space available
-    bool addMember(const AudienceMember& member) {
-        if (isFull())
-            return false;
-        seats[count++] = member;
-        return true;
-    }
-
-    // Remove member by ID (linear search)
-    bool removeMemberById(int id) {
-        for (int i = 0; i < count; ++i) {
-            if (seats[i].id == id) {
-                // Shift left the rest
-                for (int j = i; j < count - 1; ++j) {
-                    seats[j] = seats[j + 1];
-                }
-                --count;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    void displaySeats(const string& seatName) const {
-        cout << seatName << " [" << count << "/" << capacity << "]:" << endl;
-        if (count == 0) {
-            cout << "  (None)" << endl;
-            return;
-        }
-        for (int i = 0; i < count; ++i) {
-            cout << "  ID(" << seats[i].id << ") " << seats[i].name << endl;
-        }
-    }
-
-    int getCount() const {
-        return count;
-    }
-};
-
-struct OverflowNode {
-    AudienceMember member;
-    OverflowNode* next;
-    OverflowNode(const AudienceMember& m) : member(m), next(nullptr) {}
-};
-
-// Linked list queue for overflow spectators
-class OverflowQueue {
-    OverflowNode* front;
-    OverflowNode* rear;
-    int size;
-
-public:
-    OverflowQueue() : front(nullptr), rear(nullptr), size(0) {}
-
-    ~OverflowQueue() {
-        while (!isEmpty()) {
-            dequeue();
-        }
-    }
-
-    const AudienceMember* peekFront() const {
-        if (front == nullptr)
-            return nullptr;
-        return &(front->member);
-    }
-
-    void enqueue(const AudienceMember& member) {
-        OverflowNode* node = new OverflowNode(member);
-        if (rear == nullptr) {
-            front = rear = node;
-        }
-        else {
-            rear->next = node;
-            rear = node;
-        }
-        ++size;
-        cout << "Added " << member.name << " (ID: " << member.id << ") to overflow queue." << endl;
-    }
-
-    // Dequeue from overflow
-    bool dequeue() {
-        if (front == nullptr)
-            return false;
-        OverflowNode* temp = front;
-        front = front->next;
-        if (front == nullptr)
-            rear = nullptr;
-        cout << "Removed " << temp->member.name << " (ID: " << temp->member.id << ") from overflow queue." << endl;
-        delete temp;
-        --size;
-        return true;
-    }
-
-    bool isEmpty() const {
-        return front == nullptr;
-    }
-
-    int getSize() const {
-        return size;
-    }
-
-    void displayQueue() const {
-        cout << "Overflow Queue [" << size << "]:" << endl;
-        if (isEmpty()) {
-            cout << "  (Empty)" << endl;
-            return;
-        }
-        OverflowNode* current = front;
-        int pos = 1;
-        while (current != nullptr) {
-            cout << "  " << pos++ << ". ID(" << current->member.id << ") " << current->member.name << endl;
-            current = current->next;
-        }
-    }
-};
+#include "Audience_Member.hpp";
 
 class AudienceManager {
     FixedArrayQueue vipSeats;
@@ -171,36 +18,38 @@ public:
 
     bool seatAudienceMember(int id, const string& name, bool isVIP, bool isInfluencer, bool hasLiveStream) {
         AudienceMember member = { id, name, isVIP, isInfluencer, hasLiveStream };
+
         if (isVIP) {
             if (vipSeats.addMember(member)) {
                 cout << "Seated VIP " << name << " (ID: " << id << ") in VIP area." << endl;
-                return true;
+                return true;  // Important: return after success
             }
-            cout << "VIP Seating Full for " << name << endl;
+            cout << "VIP Seating Full for " << name << " (ID: " << id << ")." << endl;
         }
 
         if (isInfluencer) {
             if (influencerSeats.addMember(member)) {
                 cout << "Seated Influencer " << name << " (ID: " << id << ") in Influencer area." << endl;
-                return true;
+                return true;  // Important: return after success
             }
-            cout << "Influencer Seating Full for " << name << endl;
+            cout << "Influencer Seating Full for " << name << " (ID: " << id << ")." << endl;
         }
 
         if (hasLiveStream) {
             if (liveStreamSlots.addMember(member)) {
                 cout << "Allocated Live Stream slot to " << name << " (ID: " << id << ")." << endl;
-                return true;
+                return true;  // Important: return after success
             }
-            cout << "Live Stream Slots Full for " << name << endl;
+            cout << "Live Stream Slots Full for " << name << " (ID: " << id << ")." << endl;
         }
 
+        // Try general seating last
         if (generalSeats.addMember(member)) {
             cout << "Seated General spectator " << name << " (ID: " << id << ") in General seating." << endl;
-            return true;
+            return true;  // Important: return after success
         }
 
-        // All seats full, add to overflow
+        // All seats full; add to overflow ONLY once
         cout << "All seating areas full. Adding " << name << " (ID: " << id << ") to overflow queue.\n";
         overflowQueue.enqueue(member);
         return false;
@@ -231,21 +80,37 @@ public:
     }
 
     void tryFillOverflow() {
-        if (overflowQueue.isEmpty())
-            return;
-        // Attempt to move one member from overflow to an appropriate seating
+    // Only try to seat the member at the front of the overflow queue
+    while(!overflowQueue.isEmpty()) {
         const AudienceMember* memberPtr = overflowQueue.peekFront();
-        if (memberPtr == nullptr)
-            return; // Overflow queue is empty
+
+        if (memberPtr == nullptr) return;
 
         AudienceMember member = *memberPtr;
 
-        // Remove from overflow only if seating is available
-        bool seated = seatAudienceMember(member.id, member.name, member.isVIP, member.isInfluencer, member.hasLiveStreamSetup);
+        // Try to manually assign to categories *without* using seatAudienceMember() directly:
+        bool seated = false;
+        if (member.isVIP && vipSeats.addMember(member)) {
+            cout << "Moved " << member.name << " (ID: " << member.id << ") from overflow to VIP seat.\n";
+            seated = true;
+        } else if (member.isInfluencer && influencerSeats.addMember(member)) {
+            cout << "Moved " << member.name << " (ID: " << member.id << ") from overflow to Influencer seat.\n";
+            seated = true;
+        } else if (member.hasLiveStreamSetup && liveStreamSlots.addMember(member)) {
+            cout << "Moved " << member.name << " (ID: " << member.id << ") from overflow to Live Stream slot.\n";
+            seated = true;
+        } else if (generalSeats.addMember(member)) {
+            cout << "Moved " << member.name << " (ID: " << member.id << ") from overflow to General seat.\n";
+            seated = true;
+        }
+
         if (seated) {
-            overflowQueue.dequeue();
+            overflowQueue.dequeue(); // Only dequeue if successfully seated
+        } else {
+            break; // If current member still can't be seated, stop trying (as queue is in order)
         }
     }
+}
 
     void displayStatus() const {
         cout << "\n=== Audience Seating Status ===" << endl;
@@ -257,5 +122,3 @@ public:
         cout << "================================\n" << endl;
     }
 };
-
-#endif

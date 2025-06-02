@@ -166,7 +166,7 @@ public:
         if (isEmpty())
         {
             cout << "Registration Queue is empty." << endl;
-            return nullptr; // Queue is empty
+            return nullptr;
         }
         playerNode* node = front;
         front = front->next;
@@ -176,11 +176,11 @@ public:
         }
         else
         {
-            rear = nullptr; // Queue is now empty
+            rear = nullptr;
         }
         size--;
         cout << "Player: " << node->name << " with ID " << node->id << " was removed from the Registration Queue." << endl;
-        return node; // Return the removed player node
+        return node;
     }
 
     bool removeById(int playerId)
