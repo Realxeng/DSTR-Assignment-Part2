@@ -4,11 +4,10 @@
  * --------------------------------------------------------------------
  * 
  * Register players and add them to finalists or waiting list based on their registration status.
- * Implement check-ins for players.
- * Prioritize early-bird signups and wildcard entries.
- * Handle withdrawals and replacements efficiently.
+ * Implement check-ins for players. (PDF)
+ * Prioritize early-bird signups and wildcard entries.  (PDF)
+ * Handle withdrawals and replacements efficiently. (PDF)
  * Display all queues.
- * 
  */
 
 #include <iostream>
