@@ -1,3 +1,17 @@
+/**
+ * Registration and Queue Management System for Tournament Players
+ * This class manages the registration, waiting list, and check-in of players for a tournament.
+ * ----------------------------------------------------------
+ * 
+ * getCheckedInCount() - Returns the number of players currently checked in.
+ * getCheckedInPlayerAt(int index) - Returns a pointer to the checked-in player at the specified index.
+ * registerPlayer(int id, string name, bool isEarlyBird, bool isWildcard) - Registers a new player.
+ * finaliseList() - Finalises the list of participant by moving n players from the registration queue to the finalists array and moving any remaining players to the waiting list.
+ * checkIn(int playerId) - Checks in a player by their ID if they are in the finalists list and not already checked in.
+ * withdraw(int playerId) - Withdraws a player by their ID, removes them from the finalists list, and replaces them with a player from the waiting list if available.
+ * showAll() - Displays all the queues including registration, finalists, check-in, and waiting list.
+ */
+
 #ifndef REGISTRATIONANDQUEUE_MANAGER_HPP
 #define REGISTRATIONANDQUEUE_MANAGER_HPP
 
@@ -28,12 +42,10 @@ class RegistrationManager
         return -1;
     }
 public:
-    // Get number of players checked in
     int getCheckedInCount() {
         return checkQueue.getCount();
     }
 
-    // Get pointer to checked-in player at given index
     playerNode* getCheckedInPlayerAt(int index) {
         return checkQueue.peekAt(index);
     }
@@ -92,7 +104,8 @@ public:
             }
         }
         return checkQueue.enqueue(&finalists[index]);
-    }    
+    }   
+
     bool withdraw(int playerId)
     {
         checkQueue.removeById(playerId);
@@ -118,6 +131,7 @@ public:
         cout << "No replacement available from waiting list." << endl;
         return false;
     }
+
     void showAll()
     {
         cout << endl << "--- STATUS ---" << endl;

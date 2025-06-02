@@ -1,3 +1,18 @@
+/**
+ * Player Check-In Queue
+ * This class manages the check-in of players who have registered for a tournament.
+ * ----------------------------------------------------------
+ * Array with Circular Queue
+ * 
+ * isFull() - Checks if the queue is full.
+ * isEmpty() - Checks if the queue is empty.
+ * getCount() - Returns the current number of players in the queue.
+ * enqueue() - Adds a player to the end of the queue.
+ * removeById() - Removes a player from the queue by their ID.
+ * peekAt() - Returns the player at a specific index in the queue.
+ * displayQueue() - Displays the current check-in queue.
+ */
+
 #ifndef PLAYER_CHECKIN_HPP
 #define PLAYER_CHECKIN_HPP
 

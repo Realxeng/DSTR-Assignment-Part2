@@ -1,3 +1,16 @@
+/**
+ * TASK 2: TOURNAMENT REGISTRATION & PLAYER QUEUEING
+ * Handling player registrations, last-minute check-ins, and ensuring an orderly tournament start.
+ * --------------------------------------------------------------------
+ * 
+ * Register players and add them to finalists or waiting list based on their registration status.
+ * Implement check-ins for players.
+ * Prioritize early-bird signups and wildcard entries.
+ * Handle withdrawals and replacements efficiently.
+ * Display all queues.
+ * 
+ */
+
 #include <iostream>
 #include <string>
 

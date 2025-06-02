@@ -1,3 +1,15 @@
+/**
+ * Player Waiting List Queue
+ * This class manages a waiting list for players who registered after the tournament cap was reached.
+ * ----------------------------------------------------------
+ * Singly-Linked List with FIFO (Queue) 
+ * 
+ * isEmpty() - Checks if the waiting list is empty.
+ * enqueue() - Adds a player to the end of the waiting list.
+ * dequeue() - Removes a player from the front of the waiting list.
+ * displayQueue() - Displays the current waiting list.
+ */
+
 #ifndef PLAYER_WAITINGLIST_HPP
 #define PLAYER_WAITINGLIST_HPP
 
@@ -46,6 +58,7 @@ public:
         }
         return false;
     }
+
     void enqueue(playerNode* player)
     {
         waitNode* newNode = new waitNode;

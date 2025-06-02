@@ -1,3 +1,19 @@
+/**
+ * Player Registration Queue
+ * This class manages the registration of players for a tournament.
+ * ----------------------------------------------------------
+ * Doubly-Linked List with Priority Queue Behavior:
+ *     Wildcard > Early-Bird > Regular
+ * 
+ * insertAfter() - Inserts a new player node after a specified position.
+ * isEmpty() - Checks if the queue is empty.
+ * getSize() - Returns the current size of the queue.
+ * registerPlayer() - Registers a new player and places them in the correct position based on their status.
+ * popFront() - Dequeue the player at the front of the queue. (Highest priority player)
+ * removeById() - Removes a player from the queue by their ID.
+ * displayQueue() - Displays the current registration queue.
+ */
+
 #ifndef PLAYER_REGISTRATION_HPP
 #define PLAYER_REGISTRATION_HPP
 
