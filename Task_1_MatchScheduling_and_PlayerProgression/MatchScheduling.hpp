@@ -111,7 +111,11 @@ public:
             addGroupStagePlayer(winnerId);
         }
         else {
-            cout << "Winner ID does not match players in this match." << endl;
+            cout << "Winner ID " << winnerId << " does not match players in this match: ";
+            printPlayer(m.player1);
+            cout << " vs ";
+            printPlayer(m.player2);
+            cout << endl;
         }
     }
 
