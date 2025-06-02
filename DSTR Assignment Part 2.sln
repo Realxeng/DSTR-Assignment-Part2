@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.36105.23 d17.13
+VisualStudioVersion = 17.13.36105.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Task_2_TourRegis_and_PlayerQueue", "Task_2_TourRegis_and_PlayerQueue\Task_2_TourRegis_and_PlayerQueue.vcxproj", "{F8F9654A-FC70-4F71-AA7A-B3E78A9A8F11}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Task_1_MatchScheduling_and_PlayerProgression", "Task_1_MatchScheduling_and_PlayerProgression\Task_1_MatchScheduling_and_PlayerProgression.vcxproj", "{13C580D6-FD75-4928-BBF5-959FBF5E72FA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Task_3_LiveStream_and_SpectatorQueue", "Task_3_LiveStream_and_SpectatorQueue\Task_3_LiveStream_and_SpectatorQueue.vcxproj", "{60DA760E-6B5A-4A69-A4AB-3F4279C800E2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Task_4_GameLog_and_PerformanceLog", "Task_4_GameLog_and_PerformanceLog\Task_4_GameLog_and_PerformanceLog.vcxproj", "{E7E38709-4F11-4FB1-BC9B-B51DB5A4005B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{60DA760E-6B5A-4A69-A4AB-3F4279C800E2}.Release|x64.Build.0 = Release|x64
 		{60DA760E-6B5A-4A69-A4AB-3F4279C800E2}.Release|x86.ActiveCfg = Release|Win32
 		{60DA760E-6B5A-4A69-A4AB-3F4279C800E2}.Release|x86.Build.0 = Release|Win32
+		{E7E38709-4F11-4FB1-BC9B-B51DB5A4005B}.Debug|x64.ActiveCfg = Debug|x64
+		{E7E38709-4F11-4FB1-BC9B-B51DB5A4005B}.Debug|x64.Build.0 = Debug|x64
+		{E7E38709-4F11-4FB1-BC9B-B51DB5A4005B}.Debug|x86.ActiveCfg = Debug|Win32
+		{E7E38709-4F11-4FB1-BC9B-B51DB5A4005B}.Debug|x86.Build.0 = Debug|Win32
+		{E7E38709-4F11-4FB1-BC9B-B51DB5A4005B}.Release|x64.ActiveCfg = Release|x64
+		{E7E38709-4F11-4FB1-BC9B-B51DB5A4005B}.Release|x64.Build.0 = Release|x64
+		{E7E38709-4F11-4FB1-BC9B-B51DB5A4005B}.Release|x86.ActiveCfg = Release|Win32
+		{E7E38709-4F11-4FB1-BC9B-B51DB5A4005B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
