@@ -28,6 +28,16 @@ class RegistrationManager
         return -1;
     }
 public:
+    // Get number of players checked in
+    int getCheckedInCount() {
+        return checkQueue.getCount();
+    }
+
+    // Get pointer to checked-in player at given index
+    playerNode* getCheckedInPlayerAt(int index) {
+        return checkQueue.peekAt(index);
+    }
+
     RegistrationManager(int cap)
         : regQueue("Tournament Registration"),
           waitQueue("Waiting List"),
