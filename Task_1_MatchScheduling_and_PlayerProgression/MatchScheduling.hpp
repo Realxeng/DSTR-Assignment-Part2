@@ -3,257 +3,158 @@
 
 #include <iostream>
 #include <string>
-#include "../Task_2_TourRegis_and_PlayerQueue/RegistrationAndQueue_Manager.hpp" 
-
+#include "../Task_2_TourRegis_and_PlayerQueue/RegistrationAndQueue_Manager.hpp"
 using namespace std;
 
-// Match struct holding two players and result flag
 struct Match {
     playerNode* player1;
     playerNode* player2;
-    playerNode* winner;
+    int winnerId; // -1 means no winner decided yet
 
-    Match(playerNode* p1 = nullptr, playerNode* p2 = nullptr)
-        : player1(p1), player2(p2), winner(nullptr) {
-    }
-
-    void showMatch() {
-        cout << "Match: " << (player1 ? player1->name : "Bye");
-        cout << " VS " << (player2 ? player2->name : "Bye") << endl;
-    }
+    Match() : player1(nullptr), player2(nullptr), winnerId(-1) {}
 };
 
-// Simple queue for matches (linked-list)
-struct MatchNode {
-    Match data;
-    MatchNode* next;
-    MatchNode(const Match& m) : data(m), next(nullptr) {}
-};
+class MatchSchedulingManager {
+    playerNode* qualifiers;  // Array for qualifier stage players
+    int qualifierCount;
 
-class MatchQueue {
-    MatchNode* front;
-    MatchNode* rear;
-    int size;
+    playerNode* groupStage;  // Array for group stage players
+    int groupCount;
+
+    Match* knockoutMatches;  // Array for knockout matches
+    int knockoutCount;
 
 public:
-    MatchQueue() : front(nullptr), rear(nullptr), size(0) {}
+    MatchSchedulingManager() : qualifiers(nullptr), qualifierCount(0),
+        groupStage(nullptr), groupCount(0),
+        knockoutMatches(nullptr), knockoutCount(0) {
+    }
 
-    ~MatchQueue() {
-        while (!isEmpty()) {
-            dequeue();
+    ~MatchSchedulingManager() {
+        if (qualifiers) delete[] qualifiers;
+        if (groupStage) delete[] groupStage;
+        if (knockoutMatches) delete[] knockoutMatches;
+    }
+
+    // Initialize qualifiers using finalist array from RegistrationManager
+    void setQualifiers(playerNode finalists[], int count) {
+        if (qualifiers) delete[] qualifiers;
+        qualifierCount = count;
+        qualifiers = new playerNode[qualifierCount];
+        for (int i = 0; i < qualifierCount; ++i) {
+            qualifiers[i] = finalists[i]; // copy player info
+        }
+        cout << "Qualifiers set with " << qualifierCount << " players." << endl;
+    }
+
+    // Helper to print player info
+    void printPlayer(playerNode* p) {
+        if (p != nullptr)
+            cout << "[" << p->id << ": " << p->name << "]";
+        else
+            cout << "[---]";
+    }
+
+    // Schedule matches for the qualifier stage - pair by adjacent players
+    void scheduleQualifierMatches() {
+        if (qualifierCount < 2) {
+            cout << "Not enough players for qualifier matches." << endl;
+            return;
+        }
+        int pairCount = qualifierCount / 2;
+        if (knockoutMatches) delete[] knockoutMatches;
+        knockoutCount = pairCount;
+
+        knockoutMatches = new Match[knockoutCount];
+        for (int i = 0; i < knockoutCount; ++i) {
+            knockoutMatches[i].player1 = &qualifiers[2 * i];
+            knockoutMatches[i].player2 = &qualifiers[2 * i + 1];
+            knockoutMatches[i].winnerId = -1; // undecided
+        }
+        cout << "Qualifier matches scheduled: " << knockoutCount << " matches." << endl;
+    }
+
+    void displayMatches() {
+        if (knockoutCount == 0) {
+            cout << "No matches scheduled currently." << endl;
+            return;
+        }
+        cout << "Scheduled Matches:" << endl;
+        for (int i = 0; i < knockoutCount; ++i) {
+            cout << "Match " << i + 1 << ": ";
+            printPlayer(knockoutMatches[i].player1);
+            cout << " vs ";
+            printPlayer(knockoutMatches[i].player2);
+            if (knockoutMatches[i].winnerId == -1)
+                cout << " - Winner: Not decided yet." << endl;
+            else
+                cout << " - Winner: PlayerID " << knockoutMatches[i].winnerId << endl;
+        }
+        cout << endl;
+    }
+
+    // Advance winner for a match, pushes winner to groupStage array for demonstration
+    void advanceWinner(int matchIndex, int winnerId) {
+        if (matchIndex < 0 || matchIndex >= knockoutCount) {
+            cout << "Invalid match index." << endl;
+            return;
+        }
+        Match& m = knockoutMatches[matchIndex];
+        if (m.winnerId != -1) {
+            cout << "Winner already decided for this match." << endl;
+            return;
+        }
+        if ((m.player1 && m.player1->id == winnerId) || (m.player2 && m.player2->id == winnerId)) {
+            m.winnerId = winnerId;
+            cout << "Winner for Match " << matchIndex + 1 << " is PlayerID " << winnerId << "." << endl;
+            // Add winner to group stage array (simple implementation)
+            addGroupStagePlayer(winnerId);
+        }
+        else {
+            cout << "Winner ID does not match players in this match." << endl;
         }
     }
 
-    bool isEmpty() { return front == nullptr; }
-
-    void enqueue(const Match& m) {
-        MatchNode* newNode = new MatchNode(m);
-        if (rear) rear->next = newNode;
-        rear = newNode;
-        if (!front) front = rear;
-        size++;
-    }
-
-    Match dequeue() {
-        if (isEmpty()) {
-            cout << "MatchQueue is empty\n";
-            return Match();
-        }
-        MatchNode* temp = front;
-        Match ret = temp->data;
-        front = front->next;
-        if (!front) rear = nullptr;
-        delete temp;
-        size--;
-        return ret;
-    }
-
-    int getSize() { return size; }
-
-    void displayQueue() {
-        cout << "Matches in queue: " << size << endl;
-        MatchNode* curr = front;
-        int count = 1;
-        while (curr) {
-            cout << count << ". ";
-            curr->data.showMatch();
-            curr = curr->next;
-            count++;
-        }
-    }
-};
-
-// Simple stack for matches (linked-list) for knockout
-struct MatchStackNode {
-    Match data;
-    MatchStackNode* next;
-    MatchStackNode(const Match& m) : data(m), next(nullptr) {}
-};
-
-class MatchStack {
-    MatchStackNode* topNode;
-    int size;
-
-public:
-    MatchStack() : topNode(nullptr), size(0) {}
-
-    ~MatchStack() {
-        while (!isEmpty()) {
-            pop();
-        }
-    }
-
-    bool isEmpty() { return topNode == nullptr; }
-
-    void push(const Match& m) {
-        MatchStackNode* newNode = new MatchStackNode(m);
-        newNode->next = topNode;
-        topNode = newNode;
-        size++;
-    }
-
-    Match pop() {
-        if (isEmpty()) {
-            cout << "MatchStack is empty\n";
-            return Match();
-        }
-        MatchStackNode* temp = topNode;
-        Match ret = temp->data;
-        topNode = topNode->next;
-        delete temp;
-        size--;
-        return ret;
-    }
-
-    Match peek() {
-        if (isEmpty()) {
-            return Match();
-        }
-        return topNode->data;
-    }
-
-    int getSize() { return size; }
-};
-
-// MatchScheduler class to manage progression through qualifier and knockout
-class MatchScheduler {
-    RegistrationManager* regManager;  // link to registration manager
-    MatchQueue qualifierMatches;
-    MatchStack knockoutMatches;
-    playerNode** checkedInPlayers;    // array of pointers to checked-in players
-    int checkedInCount;
-
-public:
-    MatchScheduler(RegistrationManager* regMgr)
-        : regManager(regMgr), checkedInPlayers(nullptr), checkedInCount(0) {
-    }
-
-    ~MatchScheduler() {
-        if (checkedInPlayers) {
-            delete[] checkedInPlayers;
-        }
-    }
-
-    // Fetch players checked in from RegistrationManager's CheckInQueue
-    void fetchCheckedInPlayers() {
-        int count = regManager->getCheckedInCount();
-        checkedInCount = count;
-        if (checkedInPlayers) delete[] checkedInPlayers;
-        checkedInPlayers = new playerNode * [checkedInCount];
-        for (int i = 0; i < checkedInCount; ++i) {
-            checkedInPlayers[i] = regManager->getCheckedInPlayerAt(i);
-        }
-    }
-
-    // Schedule qualifier matches: pair players by order
-    void scheduleQualifier() {
-        cout << "Scheduling Qualifier matches...\n";
-        fetchCheckedInPlayers();
-        qualifierMatches = MatchQueue(); // reset queue
-
-        // Pair players in order, if odd # players last gets a bye (nullptr)
-        for (int i = 0; i < checkedInCount; i += 2) {
-            playerNode* p1 = checkedInPlayers[i];
-            playerNode* p2 = (i + 1 < checkedInCount) ? checkedInPlayers[i + 1] : nullptr;
-            Match m(p1, p2);
-            qualifierMatches.enqueue(m);
-        }
-        qualifierMatches.displayQueue();
-    }
-
-    // Simulate qualifier matches and record winners (for demo: pick player1 if both exist)
-    void playQualifierMatches() {
-        cout << "Playing Qualifier matches...\n";
-        knockoutMatches = MatchStack();  // reset knockout matches stack
-        while (qualifierMatches.getSize() > 0) {
-            Match m = qualifierMatches.dequeue();
-            m.showMatch();
-
-            // simple logic: if p2 is nullptr, p1 winner else p1 wins arbitrarily
-            if (m.player2 == nullptr) {
-                m.winner = m.player1;
-            }
-            else {
-                // for demo, choose the player with lex smaller name as winner
-                if (m.player1->name < m.player2->name)
-                    m.winner = m.player1;
-                else
-                    m.winner = m.player2;
-            }
-            cout << "Winner: " << m.winner->name << endl << endl;
-            // push winners to knockout stack for next stage
-            knockoutMatches.push(m);
-        }
-    }
-
-    // Play the knockout rounds until one winner remain
-    void playKnockoutRounds() {
-        cout << "Playing Knockout rounds...\n";
-        // To play knockout rounds, pop two matches at a time,
-        // create a new match with winners, and push back until 1 left.
-
-        MatchStack roundStack;
-        while (knockoutMatches.getSize() > 1) {
-            Match m1 = knockoutMatches.pop();
-            Match m2 = knockoutMatches.pop();
-
-            // If only one match left in stack (odd number), pass it forward
-            if (m2.player1 == nullptr && m2.player2 == nullptr) {
-                roundStack.push(m1);
+    // Add winner player node to group stage list (dynamically resized array)
+    void addGroupStagePlayer(int winnerId) {
+        // Find playerNode in qualifiers with winnerId
+        playerNode* winnerPlayer = nullptr;
+        for (int i = 0; i < qualifierCount; ++i) {
+            if (qualifiers[i].id == winnerId) {
+                winnerPlayer = &qualifiers[i];
                 break;
             }
-
-            playerNode* w1 = m1.winner;
-            playerNode* w2 = m2.winner;
-
-            cout << "Next Round Match: " << w1->name << " VS " << w2->name << endl;
-
-            // Decide winner, here lex smallest name for demo
-            Match nextMatch(w1, w2);
-            if (w1->name < w2->name)
-                nextMatch.winner = w1;
-            else
-                nextMatch.winner = w2;
-
-            cout << "Winner: " << nextMatch.winner->name << endl << endl;
-
-            roundStack.push(nextMatch);
         }
-
-        // If odd number of matches, push last one forward
-        if (knockoutMatches.getSize() == 1)
-            roundStack.push(knockoutMatches.pop());
-
-        knockoutMatches = roundStack;  // Assign new round to knockoutMatches
-
-        // Repeat until 1 winner remains
-        if (knockoutMatches.getSize() > 1)
-            playKnockoutRounds();
-        else if (knockoutMatches.getSize() == 1) {
-            Match finalMatch = knockoutMatches.peek();
-            cout << "=== Tournament Winner: " << finalMatch.winner->name << " ===" << endl;
+        if (winnerPlayer == nullptr) {
+            cout << "Winner player not found in qualifiers." << endl;
+            return;
         }
+        // Expand groupStage array by 1
+        playerNode* newGroupStage = new playerNode[groupCount + 1];
+        for (int i = 0; i < groupCount; ++i) {
+            newGroupStage[i] = groupStage[i];
+        }
+        newGroupStage[groupCount] = *winnerPlayer;
+        groupCount++;
+        if (groupStage) delete[] groupStage;
+        groupStage = newGroupStage;
+        cout << "Player " << winnerPlayer->name << " advanced to group stage." << endl;
     }
+
+    // Display players in group stage
+    void displayGroupStage() {
+        if (groupCount == 0) {
+            cout << "No players in group stage yet." << endl;
+            return;
+        }
+        cout << "Group Stage Players (" << groupCount << "):" << endl;
+        for (int i = 0; i < groupCount; ++i) {
+            cout << i + 1 << ". ID: " << groupStage[i].id << " Name: " << groupStage[i].name << endl;
+        }
+        cout << endl;
+    }
+
+    // Further methods to schedule group stage matches and knockout rounds can be added similarly
 };
 
 #endif
