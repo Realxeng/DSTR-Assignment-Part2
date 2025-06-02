@@ -2,7 +2,6 @@
 #include "../Task_1_MatchScheduling_and_PlayerProgression/MatchScheduling.hpp"
 #include "../Task_2_TourRegis_and_PlayerQueue/RegistrationAndQueue_Manager.hpp"
 #include <iostream>
-
 using namespace std;
 
 int main() {
@@ -40,7 +39,6 @@ int main() {
     cout << "\n----- STARTING MATCH SCHEDULING -----" << endl;
     MatchSchedulingManager scheduler;
 
-    // Pass finalists to scheduler
     cout << "Setting qualifiers using finalists from registration manager." << endl;
     scheduler.setQualifiers(regManager.getFinalists(), regManager.getFinalistCount());
 
@@ -51,9 +49,9 @@ int main() {
     scheduler.displayMatches();
 
     cout << "Simulating match results and advancing winners..." << endl;
-    scheduler.advanceWinner(0, 1); // Alice wins match 1
-    scheduler.advanceWinner(1, 5); // Eve wins match 2
-    scheduler.advanceWinner(2, 6); // Frank wins match 3
+    scheduler.advanceWinner(0, 1); //Alice wins
+    scheduler.advanceWinner(1, 5); //Eve wins
+    scheduler.advanceWinner(2, 6); //Frank wins
 
     cout << "\nDisplaying updated matches with winners:" << endl;
     scheduler.displayMatches();

@@ -36,18 +36,17 @@ public:
         if (knockoutMatches) delete[] knockoutMatches;
     }
 
-    // Initialize qualifiers using finalist array from RegistrationManager
+    //Initialize qualifiers using finalist array from RegistrationManager
     void setQualifiers(playerNode finalists[], int count) {
-        if (qualifiers) delete[] qualifiers;
+		if (qualifiers) delete[] qualifiers;//Clean up qualifiers from previous list
         qualifierCount = count;
-        qualifiers = new playerNode[qualifierCount];
+        qualifiers = new playerNode[qualifierCount]; 
         for (int i = 0; i < qualifierCount; ++i) {
-            qualifiers[i] = finalists[i]; // copy player info
+            qualifiers[i] = finalists[i];
         }
         cout << "Qualifiers set with " << qualifierCount << " players." << endl;
     }
 
-    // Helper to print player info
     void printPlayer(playerNode* p) {
         if (p != nullptr)
             cout << "[" << p->id << ": " << p->name << "]";
@@ -55,7 +54,7 @@ public:
             cout << "[---]";
     }
 
-    // Schedule matches for the qualifier stage - pair by adjacent players
+    //Schedule matches for the qualifier stage - pair by adjacent players
     void scheduleQualifierMatches() {
         if (qualifierCount < 2) {
             cout << "Not enough players for qualifier matches." << endl;
@@ -67,9 +66,9 @@ public:
 
         knockoutMatches = new Match[knockoutCount];
         for (int i = 0; i < knockoutCount; ++i) {
-            knockoutMatches[i].player1 = &qualifiers[2 * i];
+			knockoutMatches[i].player1 = &qualifiers[2 * i];// pair players by index
             knockoutMatches[i].player2 = &qualifiers[2 * i + 1];
-            knockoutMatches[i].winnerId = -1; // undecided
+            knockoutMatches[i].winnerId = -1;
         }
         cout << "Qualifier matches scheduled: " << knockoutCount << " matches." << endl;
     }
@@ -119,9 +118,9 @@ public:
         }
     }
 
-    // Add winner player node to group stage list (dynamically resized array)
+    //Add winner player node to group stage list
     void addGroupStagePlayer(int winnerId) {
-        // Find playerNode in qualifiers with winnerId
+        //Find playerNode in qualifiers with winnerId
         playerNode* winnerPlayer = nullptr;
         for (int i = 0; i < qualifierCount; ++i) {
             if (qualifiers[i].id == winnerId) {
@@ -133,8 +132,8 @@ public:
             cout << "Winner player not found in qualifiers." << endl;
             return;
         }
-        // Expand groupStage array by 1
-        playerNode* newGroupStage = new playerNode[groupCount + 1];
+        
+		playerNode* newGroupStage = new playerNode[groupCount + 1]; //Move winner to group stage
         for (int i = 0; i < groupCount; ++i) {
             newGroupStage[i] = groupStage[i];
         }
@@ -145,7 +144,7 @@ public:
         cout << "Player " << winnerPlayer->name << " advanced to group stage." << endl;
     }
 
-    // Display players in group stage
+    //Display players in group stage
     void displayGroupStage() {
         if (groupCount == 0) {
             cout << "No players in group stage yet." << endl;
@@ -157,8 +156,6 @@ public:
         }
         cout << endl;
     }
-
-    // Further methods to schedule group stage matches and knockout rounds can be added similarly
 };
 
 #endif
