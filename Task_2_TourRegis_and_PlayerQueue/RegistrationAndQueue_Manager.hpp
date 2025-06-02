@@ -42,12 +42,13 @@ class RegistrationManager
         return -1;
     }
 public:
-    int getCheckedInCount() {
-        return checkQueue.getCount();
+
+    playerNode* getFinalists() {
+        return finalists;
     }
 
-    playerNode* getCheckedInPlayerAt(int index) {
-        return checkQueue.peekAt(index);
+    int getFinalistCount() {
+        return finalistCount;
     }
 
     RegistrationManager(int cap)
