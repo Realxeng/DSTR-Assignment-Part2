@@ -10,6 +10,8 @@ int main() {
     regManager.registerPlayer(3, "Charlie", false, true);
     regManager.registerPlayer(4, "David", false, false);
     regManager.registerPlayer(5, "Eve", true, false);
+    regManager.registerPlayer(6, "Frank", false, false); // This should go to waiting list
+
 
     regManager.showAll();
 
@@ -27,6 +29,13 @@ int main() {
     // Withdraw a player and check replacement
     regManager.withdraw(4);
     regManager.showAll();
+
+    regManager.checkIn(6);
+    regManager.showAll();
+
+    // Check in a player who is not a finalist
+    regManager.checkIn(7);
+
 
     return 0;
 }
